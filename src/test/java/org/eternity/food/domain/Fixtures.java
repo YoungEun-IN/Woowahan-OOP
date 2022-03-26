@@ -1,5 +1,7 @@
 package org.eternity.food.domain;
 
+import org.eternity.food.domain.delivery.Delivery;
+import org.eternity.food.domain.delivery.Delivery.DeliveryBuilder;
 import org.eternity.food.domain.generic.money.Money;
 import org.eternity.food.domain.generic.money.Ratio;
 import org.eternity.food.domain.order.Order;
@@ -21,11 +23,10 @@ import org.eternity.food.domain.shop.Shop.ShopBuilder;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 
-import static java.time.LocalDateTime.of;
-
 public class Fixtures {
     public static ShopBuilder aShop() {
         return Shop.builder()
+                .id(1L)
                 .name("오겹돼지")
                 .commissionRate(Ratio.valueOf(0.01))
                 .open(true)
@@ -35,7 +36,8 @@ public class Fixtures {
 
     public static MenuBuilder aMenu() {
         return Menu.builder()
-                .shop(aShop().build())
+                .id(1L)
+                .shopId(aShop().build().getId())
                 .name("삼겹살 1인세트")
                 .description("삼겹살 + 야채세트 + 김치찌개")
                 .basic(anOptionGroupSpec()
@@ -78,8 +80,9 @@ public class Fixtures {
 
     public static OrderBuilder anOrder() {
         return Order.builder()
+                .id(1L)
                 .userId(1L)
-                .shop(aShop().build())
+                .shopId(aShop().build().getId())
                 .status(Order.OrderStatus.ORDERED)
                 .orderedTime(LocalDateTime.of(2020, 1, 1, 12, 0))
                 .items(Arrays.asList(anOrderLineItem().build()));
@@ -87,7 +90,7 @@ public class Fixtures {
 
     public static OrderLineItemBuilder anOrderLineItem() {
         return OrderLineItem.builder()
-                .menu(aMenu().build())
+                .menuId(aMenu().build().getId())
                 .name("삼겹살 1인세트")
                 .count(1)
                 .groups(Arrays.asList(
@@ -111,5 +114,12 @@ public class Fixtures {
         return OrderOption.builder()
                 .name("소(250g)")
                 .price(Money.wons(12000));
+    }
+
+    public static DeliveryBuilder aDelivery() {
+        return Delivery.builder()
+                .id(1L)
+                .deliveryStatus(Delivery.DeliveryStatus.DELIVERING)
+                .orderId(anOrder().build().getId());
     }
 }

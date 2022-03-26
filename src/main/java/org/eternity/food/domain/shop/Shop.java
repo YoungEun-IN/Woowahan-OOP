@@ -6,8 +6,6 @@ import org.eternity.food.domain.generic.money.Money;
 import org.eternity.food.domain.generic.money.Ratio;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 import static javax.persistence.GenerationType.IDENTITY;
 
@@ -35,14 +33,6 @@ public class Shop {
     @Column(name = "COMMISSION")
     private Money commission = Money.ZERO;
 
-    // [조회 전용 양뱡향 연관관계]
-    /**
-     * MenuBoard 생성을 위한 연관관계
-     */
-    @OneToMany(cascade = CascadeType.ALL)
-    @JoinColumn(name="SHOP_ID")
-    private List<Menu> menus = new ArrayList<>();
-
     public Shop(String name, boolean open, Money minOrderAmount) {
         this(name, open, minOrderAmount, Ratio.valueOf(0), Money.ZERO);
     }
@@ -62,10 +52,6 @@ public class Shop {
     }
 
     Shop() {
-    }
-
-    public void addMenu(Menu menu) {
-        menus.add(menu);
     }
 
     public boolean isValidOrderAmount(Money amount) {
